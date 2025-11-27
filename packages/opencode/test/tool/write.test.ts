@@ -23,7 +23,7 @@ describe("tool.write", () => {
             directory: tmp.path,
             fn: async () => {
                 // Mock LSP.diagnostics to return a large number of issues
-                const largeDiagnostics = {}
+                const largeDiagnostics: Record<string, any[]> = {}
                 for (let i = 0; i < 1000; i++) {
                     largeDiagnostics[`file_${i}.ts`] = [
                         {
