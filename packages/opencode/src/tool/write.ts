@@ -11,6 +11,8 @@ import { Filesystem } from "../util/filesystem"
 import { Instance } from "../project/instance"
 import { Agent } from "../agent/agent"
 
+const MAX_OUTPUT_LENGTH = 30_000
+
 export const WriteTool = Tool.define("write", {
   description: DESCRIPTION,
   parameters: z.object({
@@ -82,6 +84,10 @@ export const WriteTool = Tool.define("write", {
       if (file === filepath) {
         output += `\nThis file has errors, please fix\n<file_diagnostics>\n${issues.map(LSP.Diagnostic.pretty).join("\n")}\n</file_diagnostics>\n`
         continue
+      }
+      if (output.length > MAX_OUTPUT_LENGTH) {
+        output += `\n\n(Output was truncated due to length limit)`
+        break
       }
       output += `\n<project_diagnostics>\n${file}\n${issues.map(LSP.Diagnostic.pretty).join("\n")}\n</project_diagnostics>\n`
     }
