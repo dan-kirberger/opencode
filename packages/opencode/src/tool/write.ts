@@ -85,11 +85,12 @@ export const WriteTool = Tool.define("write", {
         output += `\nThis file has errors, please fix\n<file_diagnostics>\n${issues.map(LSP.Diagnostic.pretty).join("\n")}\n</file_diagnostics>\n`
         continue
       }
-      if (output.length > MAX_OUTPUT_LENGTH) {
-        output += `\n\n(Output was truncated due to length limit)`
-        break
-      }
       output += `\n<project_diagnostics>\n${file}\n${issues.map(LSP.Diagnostic.pretty).join("\n")}\n</project_diagnostics>\n`
+    }
+
+    if (output.length > MAX_OUTPUT_LENGTH) {
+      output = output.slice(0, MAX_OUTPUT_LENGTH)
+      output += "\n\n(Output was truncated due to length limit)"
     }
 
     return {
